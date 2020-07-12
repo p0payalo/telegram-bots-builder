@@ -1,0 +1,35 @@
+﻿@model WebTelegramBotsBuilder.Models.ViewModels.RegisterModel
+@{
+    Layout = "AnonymousLayout";
+}
+
+@section Styles{
+    <link href="~/css/Register.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="form-container">
+    <form asp-action="Register" asp-controller="Home" method="post">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label asp-for="Name" for="inputName">Name</label>
+            <input asp-for="Name" type="text" name="Name" placeholder="Your name here" id="inputName" class="form-control" />
+            <span asp-validation-for="Name" style="color:red" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" for="inputPassword">Password</label>
+            <input asp-for="Password" type="password" name="Password" placeholder="Your password here" id="inputPassword" class="form-control" />
+            <span asp-validation-for="Password" style="color:red" />
+        </div>
+        <div class="form-group">
+            <label asp-for="ConfirmPassword" for="confirmPassword">Confirm password</label>
+            <input asp-for="ConfirmPassword" type="password" name="ConfirmPassword" placeholder="Confirm password here" id="confirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" style="color:red" />
+        </div>
+        <input type="submit" value="Sign Up" class="btn btn-primary" />
+    </form>
+</div>
+@section Scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

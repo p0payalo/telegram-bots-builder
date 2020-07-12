@@ -1,0 +1,15 @@
+﻿@{
+    if (ViewData["name"].ToString() != "")
+    {
+        Layout = "UserLayout";
+    }
+    else
+    {
+        Layout = "AnonymousLayout";
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome @Model</h1>
+    <p>This application will create your own telegram bot without programming knowledge</p>
+</div>

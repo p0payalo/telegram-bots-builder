@@ -1,0 +1,82 @@
+﻿.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+    /* Сайдбар ссылки */
+.sidebar a {
+     display: block;
+     color: black;
+     padding: 16px;
+     text-decoration: none;
+}
+
+    /* Активная/текущая ссылка  #4CAF50  #3294f0*/
+    .sidebar a.active {
+        background: linear-gradient(to bottom,#007bff 10%,#11d9c5);
+        color: white;
+    }
+
+        /* Ссылки при наведении мыши */
+.sidebar a:hover:not(.active) {
+     background-color: #555;
+     color: white;
+}
+
+/* Содержание страницы. Значение свойства margin-left должно соответствовать значению свойства width боковой панели */
+div.content {
+    margin-left: 200px;
+    padding: 1px 16px;
+}
+
+/* На экранах шириной менее 700 пикселей превратить боковую панель в верхнюю панель */
+@media screen and (max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .sidebar a {
+        float: left;
+    }
+
+    div.content {
+        margin-left: 0;
+    }
+}
+
+/* На экранах размером менее 400 пикселей панель отображать вертикально, а не горизонтально */
+@media screen and (max-width: 400px) {
+    .sidebar a {
+        text-align: center;
+        float: none;
+    }
+}
+
+.sidebar_view
+{
+    display: none;
+}
+
+.active_view
+{
+    display: block;
+}
+
+.bot_preview:not(:last-child) {
+    border-bottom: 2px solid black;
+    height: auto;
+    width: auto;
+}
+
+.buttons_view{
+    display: inline-block;
+    width: auto;
+    height: auto;
+}

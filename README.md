@@ -8,6 +8,7 @@
 - [Entity Framework Core](https://github.com/dotnet/efcore)
 - .Net Core 3.1
 - BotCreator library (i will upload it soon)
+- BotHandler executable (i will upload it soon)
 
 # TODO
 - Improve visual design

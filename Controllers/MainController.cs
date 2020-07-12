@@ -73,7 +73,8 @@ namespace WebTelegramBotsBuilder.Controllers
         [Route("download")]
         public async Task<IActionResult> DownloadBot(int Id)
         {
-            Models.User user = await db.Users.Include(x => x.Bots).FirstAsync(x => x.Name == User.Identity.Name);
+            Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
+                .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
             try
             {
                 string files = Path.Combine(appEnvironment.ContentRootPath, "UserFiles");

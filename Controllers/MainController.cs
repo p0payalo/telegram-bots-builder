@@ -77,7 +77,7 @@ namespace WebTelegramBotsBuilder.Controllers
                 .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
             try
             {
-                string files = Path.Combine(appEnvironment.ContentRootPath, "UserFiles");
+                string files = appEnvironment.ContentRootPath + @"\UserFiles";
                 string userPath = Directory.CreateDirectory(files + @"\" + User.Identity.Name.ToString()).FullName;
                 TelegramBot bot = user.Bots.First(x => x.TelegramBotId == Id);
                 if (Directory.Exists(userPath + @"\" + bot.BotName))
@@ -95,6 +95,11 @@ namespace WebTelegramBotsBuilder.Controllers
                     using (ZipArchive zip = ZipFile.Open(botPath + @"\bot.zip", ZipArchiveMode.Create))
                     {
                         zip.CreateEntryFromFile(botPath + @"\" + bot.BotName + ".bot", "root/" + bot.BotName + ".bot");
+                        string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
+                        foreach(var i in botHandlerFiles)
+                        {
+                            zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
+                        }
                     }
                     return PhysicalFile(botPath + @"\bot.zip", "application/zip", "bot.zip");
                 }

@@ -19,6 +19,7 @@ mono_crash.*
 #userfiles
 [Uu]ser[Ff]iles/*
 ![Uu]ser[Ff]iles/.gitkeep 
+![Uu]ser[Ff]iles/BotHandler
 
 # Build results
 [Dd]ebug/

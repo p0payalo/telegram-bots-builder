@@ -101,6 +101,7 @@ namespace WebTelegramBotsBuilder.Controllers
                             zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
                         }
                     }
+                    System.IO.File.Delete(botPath + @"\" + bot.BotName + ".bot");
                     return PhysicalFile(botPath + @"\bot.zip", "application/zip", "bot.zip");
                 }
             }

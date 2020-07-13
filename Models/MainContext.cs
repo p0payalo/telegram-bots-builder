@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BotCreator.Core;
 using BotCreator.Core.BotQueries;
-using BotCreator.Core.BotResponses;
 
 namespace WebTelegramBotsBuilder.Models
 {
@@ -9,13 +8,10 @@ namespace WebTelegramBotsBuilder.Models
     {
         public MainContext(DbContextOptions<MainContext> options): base(options)
         {
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<BotMessageQuery>();
-            builder.Entity<BotMessageResponse>();
             builder.Entity<TelegramBot>();
         }
 

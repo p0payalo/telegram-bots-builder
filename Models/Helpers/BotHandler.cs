@@ -1,6 +1,5 @@
 ﻿using BotCreator.Core;
 using BotCreator.Core.BotQueries;
-using BotCreator.Core.BotResponses;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -61,14 +60,13 @@ namespace WebTelegramBotsBuilder.Models.Helpers
         private static void OnMessage(object sender, MessageEventArgs e)
         {
             TelegramBot invoker = Bots[sender as TelegramBotClient];
-            if(e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
+            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
             {
-                List<BotMessageQuery> botQueries = invoker.BotQueries.Where(x => typeof(BotMessageQuery) == x.GetType()).Cast<BotMessageQuery>()
-                    .ToList();
-                BotMessageQuery target = null;
-                foreach(var query in botQueries)
+                List<BotQuery> botQueries = invoker.BotQueries.Where(x => x.QueryType == MessageType.Text).ToList();
+                BotQuery target = null;
+                foreach (var query in botQueries)
                 {
-                    if(query.Message == e.Message.Text)
+                    if (query.Value.Equals(e.Message.Text))
                     {
                         target = query;
                         break;
@@ -76,7 +74,7 @@ namespace WebTelegramBotsBuilder.Models.Helpers
                 }
                 if (target != null)
                 {
-                    (sender as TelegramBotClient).SendTextMessageAsync(e.Message.Chat.Id, FormatString((target.Response as BotMessageResponse).Message, e.Message.From));
+                    (sender as TelegramBotClient).SendTextMessageAsync(e.Message.Chat.Id, FormatString(target.Response.Value, e.Message.From));
                 }
             }
         }
@@ -119,7 +117,7 @@ namespace WebTelegramBotsBuilder.Models.Helpers
             source = StringFormatter.FormatStringWithParams(patterns["date"], source, datePatternParams);
 
             Match timeReg = Regex.Match(source, patterns["time"]);
-            DateTime dateNow = DateTime.UtcNow;
+            now = DateTime.UtcNow;
             if (timeReg.Success)
             {
                 try
@@ -129,14 +127,14 @@ namespace WebTelegramBotsBuilder.Models.Helpers
                 }
                 catch
                 {
-                    dateNow = DateTime.UtcNow;
+                    now = DateTime.UtcNow;
                 }
             }
             Dictionary<string, string> timePatternParams = new Dictionary<string, string>()
             {
-                ["HH"] = dateNow.ToString("HH"),
-                ["mm"] = dateNow.ToString("mm"),
-                ["ss"] = dateNow.ToString("ss")
+                ["HH"] = now.ToString("HH"),
+                ["mm"] = now.ToString("mm"),
+                ["ss"] = now.ToString("ss")
             };
             source = StringFormatter.FormatStringWithParams(patterns["time"], source, timePatternParams);
 

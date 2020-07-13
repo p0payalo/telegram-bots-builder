@@ -1,18 +1,18 @@
-﻿@model BotCreator.Core.BotQueries.BotMessageQuery
+﻿@model BotCreator.Core.BotQueries.BotQuery
 @{
     Layout = "UserLayout";
 }
 
     <form asp-action="UpdateQuery" asp-controller="Bots" method="post">
-        <input type="hidden" name="Id" value="@Model.BotQueryId" />
+        <input type="hidden" name="Id" value="@Model.Id" />
         <input type="hidden" name="BotId" value="@ViewBag.BotId" />
         <div class="form-group">
             <label for="inputName">Bot Query</label>
-            <input type="text" name="Query" placeholder="Query" id="inputQuery" class="form-control" value="@Model.Message" />
+            <input type="text" name="Query" placeholder="Query" id="inputQuery" class="form-control" value="@Model.Value" />
         </div>
         <div class="form-group">
             <label for="inputToken">Bot Response</label>
-            <input type="text" name="Response" placeholder="Response" id="inputResponse" class="form-control" value="@((Model.Response as BotCreator.Core.BotResponses.BotMessageResponse).Message)" />
+            <input type="text" name="Response" placeholder="Response" id="inputResponse" class="form-control" value="@Model.Response.Value" />
         </div>
         <input type="submit" value="Edit" class="btn btn-success" />
     </form>

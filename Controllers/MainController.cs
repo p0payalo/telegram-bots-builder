@@ -58,7 +58,7 @@ namespace WebTelegramBotsBuilder.Controllers
             Models.User user = await db.Users.Include(x=>x.Bots).FirstAsync(x => x.Name == User.Identity.Name);
             try
             {
-                (user.Bots as List<TelegramBot>).Remove(user.Bots.First(x => x.TelegramBotId == Id));
+                (user.Bots as List<TelegramBot>).Remove(user.Bots.First(x => x.Id == Id));
             }
             catch(Exception e)
             {
@@ -79,7 +79,7 @@ namespace WebTelegramBotsBuilder.Controllers
             {
                 string files = appEnvironment.ContentRootPath + @"\UserFiles";
                 string userPath = Directory.CreateDirectory(files + @"\" + User.Identity.Name.ToString()).FullName;
-                TelegramBot bot = user.Bots.First(x => x.TelegramBotId == Id);
+                TelegramBot bot = user.Bots.First(x => x.Id == Id);
                 if (Directory.Exists(userPath + @"\" + bot.BotName))
                 {
                     return PhysicalFile(userPath + @"\" + bot.BotName + @"\bot.zip", "application/zip", "bot.zip");
@@ -120,7 +120,7 @@ namespace WebTelegramBotsBuilder.Controllers
             TelegramBot model;
             try
             {
-                model = user.Bots.First(x => x.TelegramBotId == Id);
+                model = user.Bots.First(x => x.Id == Id);
                 model.IsStarted = true;
                 db.Bots.Update(model);
                 await db.SaveChangesAsync();
@@ -142,7 +142,7 @@ namespace WebTelegramBotsBuilder.Controllers
             TelegramBot model;
             try
             {
-                model = user.Bots.First(x => x.TelegramBotId == Id);
+                model = user.Bots.First(x => x.Id == Id);
                 model.IsStarted = false;
                 db.Bots.Update(model);
                 await db.SaveChangesAsync();

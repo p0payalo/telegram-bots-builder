@@ -9,7 +9,7 @@
       "BotHandler/1.0.0": {
         "dependencies": {
           "Telegram.Bot": "15.7.1",
-          "BotCreator": "1.0.0.0"
+          "BotCreator": "2.0.0.0"
         },
         "runtime": {
           "BotHandler.dll": {}
@@ -727,11 +727,11 @@
           }
         }
       },
-      "BotCreator/1.0.0.0": {
+      "BotCreator/2.0.0.0": {
         "runtime": {
           "BotCreator.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
           }
         }
       }
@@ -1282,7 +1282,7 @@
       "path": "telegram.bot/15.7.1",
       "hashPath": "telegram.bot.15.7.1.nupkg.sha512"
     },
-    "BotCreator/1.0.0.0": {
+    "BotCreator/2.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

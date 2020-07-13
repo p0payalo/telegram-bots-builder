@@ -2,7 +2,7 @@
 
 namespace WebTelegramBotsBuilder.Migrations
 {
-    public partial class initial : Migration
+    public partial class newqueries : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,15 +10,14 @@ namespace WebTelegramBotsBuilder.Migrations
                 name: "BotResponses",
                 columns: table => new
                 {
-                    BotResponseId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    responseType = table.Column<int>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Message = table.Column<string>(nullable: true)
+                    ResponseType = table.Column<int>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BotResponses", x => x.BotResponseId);
+                    table.PrimaryKey("PK_BotResponses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,7 +38,7 @@ namespace WebTelegramBotsBuilder.Migrations
                 name: "Bots",
                 columns: table => new
                 {
-                    TelegramBotId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
                     IsStarted = table.Column<bool>(nullable: false),
@@ -48,7 +47,7 @@ namespace WebTelegramBotsBuilder.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bots", x => x.TelegramBotId);
+                    table.PrimaryKey("PK_Bots", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Bots_Users_UserId",
                         column: x => x.UserId,
@@ -61,35 +60,34 @@ namespace WebTelegramBotsBuilder.Migrations
                 name: "BotQueries",
                 columns: table => new
                 {
-                    BotQueryId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BotResponseId = table.Column<int>(nullable: false),
-                    queryType = table.Column<int>(nullable: false),
-                    TelegramBotId = table.Column<int>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Message = table.Column<string>(nullable: true)
+                    ResponseId = table.Column<int>(nullable: true),
+                    QueryType = table.Column<int>(nullable: false),
+                    Value = table.Column<string>(nullable: true),
+                    TelegramBotId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BotQueries", x => x.BotQueryId);
+                    table.PrimaryKey("PK_BotQueries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BotQueries_BotResponses_BotResponseId",
-                        column: x => x.BotResponseId,
+                        name: "FK_BotQueries_BotResponses_ResponseId",
+                        column: x => x.ResponseId,
                         principalTable: "BotResponses",
-                        principalColumn: "BotResponseId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BotQueries_Bots_TelegramBotId",
                         column: x => x.TelegramBotId,
                         principalTable: "Bots",
-                        principalColumn: "TelegramBotId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BotQueries_BotResponseId",
+                name: "IX_BotQueries_ResponseId",
                 table: "BotQueries",
-                column: "BotResponseId");
+                column: "ResponseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BotQueries_TelegramBotId",

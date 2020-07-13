@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BotCreator.Core;
 using BotCreator.Core.BotQueries;
-using BotCreator.Core.BotResponses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +33,7 @@ namespace WebTelegramBotsBuilder.Controllers
             TelegramBot model;
             try
             {
-                model = user.Bots.FirstOrDefault(x => x.TelegramBotId == Id);
+                model = user.Bots.FirstOrDefault(x => x.Id == Id);
             }
             catch
             {
@@ -51,7 +50,7 @@ namespace WebTelegramBotsBuilder.Controllers
             TelegramBot bot;
             try
             {
-                bot = user.Bots.First(x => x.TelegramBotId == Id);
+                bot = user.Bots.First(x => x.Id == Id);
                 bot.BotName = BotName;
                 bot.BotToken = BotToken;
                 db.Bots.Update(bot);
@@ -73,8 +72,8 @@ namespace WebTelegramBotsBuilder.Controllers
             TelegramBot bot;
             try
             {
-                bot = user.Bots.First(x => x.TelegramBotId == Id);
-                bot.BotQueries.Add(new BotMessageQuery(Query, new BotMessageResponse(Response)));
+                bot = user.Bots.First(x => x.Id == Id);
+                bot.BotQueries.Add(new BotQuery(Query, new BotResponse(Response, MessageType.Text), MessageType.Text));
                 db.Update(bot);
                 await db.SaveChangesAsync();
             }
@@ -91,10 +90,10 @@ namespace WebTelegramBotsBuilder.Controllers
         {
             Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
                 .ThenInclude(x => x.Response).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
-            TelegramBot bot = user.Bots.FirstOrDefault(x => x.TelegramBotId == BotId);
+            TelegramBot bot = user.Bots.FirstOrDefault(x => x.Id == BotId);
             try
             {
-                db.BotQueries.Remove(bot.BotQueries.First(x => x.BotQueryId == Id));
+                db.BotQueries.Remove(bot.BotQueries.First(x => x.Id == Id));
             }
             catch
             {
@@ -110,13 +109,13 @@ namespace WebTelegramBotsBuilder.Controllers
         {
             Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
                 .ThenInclude(x => x.Response).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
-            BotMessageQuery target = null;
+            BotQuery target = null;
             try
             {
-                TelegramBot bot = user.Bots.FirstOrDefault(x => x.TelegramBotId == BotId);
-                target = (BotMessageQuery)bot.BotQueries.First(x => x.BotQueryId == Id);
-                target.Message = Query;
-                (target.Response as BotMessageResponse).Message = Response;
+                TelegramBot bot = user.Bots.FirstOrDefault(x => x.Id == BotId);
+                target = bot.BotQueries.First(x => x.Id == Id);
+                target.Value = Query;
+                target.Response.Value = Response;
             }
             catch
             {
@@ -134,11 +133,11 @@ namespace WebTelegramBotsBuilder.Controllers
             ViewData["name"] = User.Identity.Name;
             Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
                 .ThenInclude(x => x.Response).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
-            BotMessageQuery target;
+            BotQuery target;
             try
             {
-                TelegramBot bot = user.Bots.FirstOrDefault(x => x.TelegramBotId == BotId);
-                target = (BotMessageQuery)bot.BotQueries.First(x => x.BotQueryId == Id);
+                TelegramBot bot = user.Bots.FirstOrDefault(x => x.Id == BotId);
+                target = bot.BotQueries.First(x => x.Id == Id);
             }
             catch
             {

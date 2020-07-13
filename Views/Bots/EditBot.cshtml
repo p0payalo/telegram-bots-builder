@@ -20,16 +20,16 @@
             foreach (var i in Model.BotQueries)
             {
                 <div class="bot_preview text-center">
-                    <p>Query - @((i as BotCreator.Core.BotQueries.BotMessageQuery).Message)</p>
-                    <p>Response - @((i.Response as BotCreator.Core.BotResponses.BotMessageResponse).Message)</p>
+                    <p>Query - @i.Value</p>
+                    <p>Response - @i.Response.Value</p>
                     <form asp-action="UpdateQuery" asp-controller="Bots" method="get" class="buttons_view">
-                        <input type="hidden" value="@i.BotQueryId" name="Id" />
-                        <input type="hidden" value="@Model.TelegramBotId" name="BotId" />
+                        <input type="hidden" value="@i.Id" name="Id" />
+                        <input type="hidden" value="@Model.Id" name="BotId" />
                         <input type="submit" value="Edit" class="btn btn-warning mb-2 text-white" />
                     </form>
                     <form asp-action="RemoveQuery" asp-controller="Bots" method="post" class="buttons_view">
-                        <input type="hidden" value="@i.BotQueryId" name="Id" />
-                        <input type="hidden" value="@Model.TelegramBotId" name="BotId" />
+                        <input type="hidden" value="@i.Id" name="Id" />
+                        <input type="hidden" value="@Model.Id" name="BotId" />
                         <input type="submit" value="Delete" class="btn btn-danger mb-2" />
                     </form>
                 </div>
@@ -38,7 +38,7 @@
     </div>
     <div class="sidebar_view">
         <form asp-action="UpdateBot" asp-controller="Bots" method="post">
-            <input type="hidden" name="Id" value="@Model.TelegramBotId" />
+            <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
                 <label for="inputName">Bot Name</label>
                 <input type="text" name="BotName" value="@Model.BotName" id="inputName" class="form-control" />
@@ -53,7 +53,7 @@
     <div class="sidebar_view">
         <div class="queries_info">
             <form asp-action="AddQuery" asp-controller="Bots" method="post">
-                <input type="hidden" name="Id" value="@Model.TelegramBotId" />
+                <input type="hidden" name="Id" value="@Model.Id" />
                 <div class="form-group">
                     <label for="inputName">Bot Query</label>
                     <input type="text" name="Query" placeholder="Query" id="inputQuery" class="form-control" />

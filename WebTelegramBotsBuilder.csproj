@@ -11,6 +11,14 @@
     <Compile Remove="Migrations\20200704220458_initial.Designer.cs" />
     <Compile Remove="Migrations\20200704223716_initial.cs" />
     <Compile Remove="Migrations\20200704223716_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200704223904_initial.cs" />
+    <Compile Remove="Migrations\20200704223904_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200713101847_new queries.cs" />
+    <Compile Remove="Migrations\20200713101847_new queries.Designer.cs" />
+    <Compile Remove="Migrations\20200713102058_new queries.cs" />
+    <Compile Remove="Migrations\20200713102058_new queries.Designer.cs" />
+    <Compile Remove="Migrations\20200713102926_update queries.cs" />
+    <Compile Remove="Migrations\20200713102926_update queries.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,13 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="BotCreator">
-      <HintPath>..\..\BotCreator\BotCreator\bin\Release\BotCreator.dll</HintPath>
-    </Reference>
+    <Folder Include="UserFiles\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UserFiles\" />
+    <Reference Include="BotCreator">
+      <HintPath>..\..\BotCreator\BotCreator\bin\Release\BotCreator.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

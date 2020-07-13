@@ -24,20 +24,20 @@
                             @{
                                 if (i.IsStarted)
                                 {
-                                    <a class="btn btn-danger text-white mb-2 toggle-power" asp-action="StopBot" asp-controller="Main" asp-route-Id="@i.TelegramBotId">Stop Bot</a>
+                                    <a class="btn btn-danger text-white mb-2 toggle-power" asp-action="StopBot" asp-controller="Main" asp-route-Id="@i.Id">Stop Bot</a>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-success text-white mb-2 toggle-power" asp-action="StartBot" asp-controller="Main" asp-route-Id="@i.TelegramBotId">Start Bot</a>
+                                    <a class="btn btn-success text-white mb-2 toggle-power" asp-action="StartBot" asp-controller="Main" asp-route-Id="@i.Id">Start Bot</a>
                                 }
                             }
-                            <a class="btn btn-warning text-white mb-2" asp-action="EditBot" asp-controller="Bots" asp-route-Id="@i.TelegramBotId">Edit</a>
+                            <a class="btn btn-warning text-white mb-2" asp-action="EditBot" asp-controller="Bots" asp-route-Id="@i.Id">Edit</a>
                             <form method="post" asp-action="RemoveBot" asp-controller="Main" class="buttons_view">
-                                <input type="hidden" name="Id" value="@i.TelegramBotId" />
+                                <input type="hidden" name="Id" value="@i.Id" />
                                 <input type="submit" value="Delete" class="btn btn-danger mb-2" />
                             </form>
                             <form method="post" asp-action="DownloadBot" asp-controller="Main" class="buttons_view">
-                                <input type="hidden" name="Id" value="@i.TelegramBotId" />
+                                <input type="hidden" name="Id" value="@i.Id" />
                                 <input type="submit" value="Download" class="btn btn-secondary mb-2" />
                             </form>
 

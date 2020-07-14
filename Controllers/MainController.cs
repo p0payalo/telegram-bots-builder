@@ -83,15 +83,10 @@ namespace WebTelegramBotsBuilder.Controllers
             try
             {
                 Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
-                .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
-
+                                        .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
                 string files = appEnvironment.ContentRootPath + @"\UserFiles";
-                string userPath = Directory.CreateDirectory(files + @"\" + User.Identity.Name.ToString()).FullName;
+                string userPath = Directory.CreateDirectory(files + @"\" + User.Identity.Name).FullName;
                 TelegramBot bot = user.Bots.First(x => x.Id == Id);
-                if (Directory.Exists(userPath + @"\" + bot.BotName))
-                {
-                    Directory.Delete(userPath + @"\" + bot.BotName, true);
-                }
                 string botPath = Directory.CreateDirectory(userPath + @"\" + bot.BotName).FullName;
                 using (FileStream fs = System.IO.File.Create(botPath + @"\" + bot.BotName + ".bot"))
                 {
@@ -108,7 +103,8 @@ namespace WebTelegramBotsBuilder.Controllers
                     }
                 }
                 System.IO.File.Delete(botPath + @"\" + bot.BotName + ".bot");
-                return PhysicalFile(botPath + @"\bot.zip", "application/zip", "bot.zip");
+                FileStream file = new FileStream(botPath + @"\bot.zip", FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+                return File(file, "application/zip", "bot.zip");
 
             }
             catch (Exception e)

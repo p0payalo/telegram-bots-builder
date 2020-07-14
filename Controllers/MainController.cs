@@ -84,28 +84,27 @@ namespace WebTelegramBotsBuilder.Controllers
             {
                 Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
                                         .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
-                string files = appEnvironment.ContentRootPath + @"\UserFiles";
-                string userPath = Directory.CreateDirectory(files + @"\" + User.Identity.Name).FullName;
                 TelegramBot bot = user.Bots.First(x => x.Id == Id);
-                string botPath = Directory.CreateDirectory(userPath + @"\" + bot.BotName).FullName;
-                using (FileStream fs = System.IO.File.Create(botPath + @"\" + bot.BotName + ".bot"))
+                byte[] result;
+                using(MemoryStream ms = new MemoryStream())
                 {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    bf.Serialize(fs, bot);
-                }
-                using (ZipArchive zip = ZipFile.Open(botPath + @"\bot.zip", ZipArchiveMode.Create))
-                {
-                    zip.CreateEntryFromFile(botPath + @"\" + bot.BotName + ".bot", "root/" + bot.BotName + ".bot");
-                    string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
-                    foreach (var i in botHandlerFiles)
+                    using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                     {
-                        zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
+                        string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
+                        foreach (var i in botHandlerFiles)
+                        {
+                            zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
+                        }
+                        ZipArchiveEntry entry = zip.CreateEntry("root/" + bot.BotName + ".bot");
+                        using (Stream entryStream = entry.Open())
+                        {
+                            BinaryFormatter bf = new BinaryFormatter();
+                            bf.Serialize(entryStream, bot);
+                        }
                     }
+                    result = ms.ToArray();
                 }
-                System.IO.File.Delete(botPath + @"\" + bot.BotName + ".bot");
-                FileStream file = new FileStream(botPath + @"\bot.zip", FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
-                return File(file, "application/zip", "bot.zip");
-
+                return File(result, "application/zip", "bot.zip");
             }
             catch (Exception e)
             {

@@ -30,9 +30,9 @@ namespace WebTelegramBotsBuilder.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Bots()
+        public async Task<IActionResult> Bots()
         {
-            Models.User user = db.Users.Include(u => u.Bots).FirstOrDefault(x => x.Name == User.Identity.Name);
+            Models.User user = await db.Users.Include(u => u.Bots).FirstAsync(x => x.Name == User.Identity.Name);
             if (user != null)
             {
                 return View("Bots", user);
@@ -42,12 +42,19 @@ namespace WebTelegramBotsBuilder.Controllers
 
         [HttpPost]
         [Route("addbot")]
-        public IActionResult AddBot(string BotName, string BotToken)
+        public async Task<IActionResult> AddBot(string BotName, string BotToken)
         {
-            Models.User user = db.Users.FirstOrDefault(x => x.Name == User.Identity.Name);
-            (user.Bots as List<TelegramBot>).Add(new TelegramBot(BotToken, BotName));
-            db.Update(user);
-            db.SaveChanges();
+            try
+            {
+                Models.User user = await db.Users.FirstAsync(x => x.Name == User.Identity.Name);
+                (user.Bots as List<TelegramBot>).Add(new TelegramBot(BotToken, BotName));
+                db.Update(user);
+                db.SaveChanges();
+            }
+            catch
+            {
+                return View("Error", new ErrorModel("Undefined error"));
+            }
             return RedirectToAction("Bots");
         }
 
@@ -55,28 +62,29 @@ namespace WebTelegramBotsBuilder.Controllers
         [Route("removebot")]
         public async Task<IActionResult> RemoveBot(int Id)
         {
-            Models.User user = await db.Users.Include(x=>x.Bots).FirstAsync(x => x.Name == User.Identity.Name);
             try
             {
+                Models.User user = await db.Users.Include(x => x.Bots).FirstAsync(x => x.Name == User.Identity.Name);
                 (user.Bots as List<TelegramBot>).Remove(user.Bots.First(x => x.Id == Id));
+                db.Update(user);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Bots");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View("Error", new ErrorModel("Bad bot index"));
             }
-            db.Update(user);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Bots");
         }
 
         [HttpPost]
         [Route("download")]
         public async Task<IActionResult> DownloadBot(int Id)
         {
-            Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
-                .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
             try
             {
+                Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
+                .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
+
                 string files = appEnvironment.ContentRootPath + @"\UserFiles";
                 string userPath = Directory.CreateDirectory(files + @"\" + User.Identity.Name.ToString()).FullName;
                 TelegramBot bot = user.Bots.First(x => x.Id == Id);
@@ -96,7 +104,7 @@ namespace WebTelegramBotsBuilder.Controllers
                     {
                         zip.CreateEntryFromFile(botPath + @"\" + bot.BotName + ".bot", "root/" + bot.BotName + ".bot");
                         string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
-                        foreach(var i in botHandlerFiles)
+                        foreach (var i in botHandlerFiles)
                         {
                             zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
                         }
@@ -115,44 +123,44 @@ namespace WebTelegramBotsBuilder.Controllers
         [Route("start")]
         public async Task<IActionResult> StartBot(int Id)
         {
-            Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x=>x.BotQueries)
-                                                                  .ThenInclude(x=>x.Response).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
-            TelegramBot model;
             try
             {
+                Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
+                                                                  .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
+                TelegramBot model;
                 model = user.Bots.First(x => x.Id == Id);
                 model.IsStarted = true;
                 db.Bots.Update(model);
                 await db.SaveChangesAsync();
                 BotHandler.StartHandleAsync(model);
+                return new NoContentResult();
             }
-            catch(ArgumentException e)
+            catch (ArgumentException e)
             {
                 return View("Error", new ErrorModel("Bad bot token"));
             }
-            return new NoContentResult();
         }
 
         [HttpGet]
         [Route("stop")]
         public async Task<IActionResult> StopBot(int Id)
         {
-            Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
-                                                                  .ThenInclude(x => x.Response).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
-            TelegramBot model;
             try
             {
+                Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
+                                                                  .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
+                TelegramBot model;
                 model = user.Bots.First(x => x.Id == Id);
                 model.IsStarted = false;
                 db.Bots.Update(model);
                 await db.SaveChangesAsync();
                 BotHandler.StopHandle(model);
+                return new NoContentResult();
             }
             catch
             {
                 return View("Error", new ErrorModel("Bad bot index"));
             }
-            return new NoContentResult();
         }
     }
 }

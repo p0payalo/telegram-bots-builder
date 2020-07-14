@@ -33,7 +33,7 @@ namespace WebTelegramBotsBuilder.Controllers
                 Models.User user = await db.Users.Include(x => x.Bots).ThenInclude(x => x.BotQueries)
                     .ThenInclude(x => x.Response).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
                 TelegramBot model;
-                model = user.Bots.FirstOrDefault(x => x.Id == Id);
+                model = user.Bots.First(x => x.Id == Id);
                 return View("EditBot", model);
             }
             catch

@@ -90,28 +90,26 @@ namespace WebTelegramBotsBuilder.Controllers
                 TelegramBot bot = user.Bots.First(x => x.Id == Id);
                 if (Directory.Exists(userPath + @"\" + bot.BotName))
                 {
-                    return PhysicalFile(userPath + @"\" + bot.BotName + @"\bot.zip", "application/zip", "bot.zip");
+                    Directory.Delete(userPath + @"\" + bot.BotName, true);
                 }
-                else
+                string botPath = Directory.CreateDirectory(userPath + @"\" + bot.BotName).FullName;
+                using (FileStream fs = System.IO.File.Create(botPath + @"\" + bot.BotName + ".bot"))
                 {
-                    string botPath = Directory.CreateDirectory(userPath + @"\" + bot.BotName).FullName;
-                    using (FileStream fs = System.IO.File.Create(botPath + @"\" + bot.BotName + ".bot"))
-                    {
-                        BinaryFormatter bf = new BinaryFormatter();
-                        bf.Serialize(fs, bot);
-                    }
-                    using (ZipArchive zip = ZipFile.Open(botPath + @"\bot.zip", ZipArchiveMode.Create))
-                    {
-                        zip.CreateEntryFromFile(botPath + @"\" + bot.BotName + ".bot", "root/" + bot.BotName + ".bot");
-                        string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
-                        foreach (var i in botHandlerFiles)
-                        {
-                            zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
-                        }
-                    }
-                    System.IO.File.Delete(botPath + @"\" + bot.BotName + ".bot");
-                    return PhysicalFile(botPath + @"\bot.zip", "application/zip", "bot.zip");
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(fs, bot);
                 }
+                using (ZipArchive zip = ZipFile.Open(botPath + @"\bot.zip", ZipArchiveMode.Create))
+                {
+                    zip.CreateEntryFromFile(botPath + @"\" + bot.BotName + ".bot", "root/" + bot.BotName + ".bot");
+                    string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
+                    foreach (var i in botHandlerFiles)
+                    {
+                        zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
+                    }
+                }
+                System.IO.File.Delete(botPath + @"\" + bot.BotName + ".bot");
+                return PhysicalFile(botPath + @"\bot.zip", "application/zip", "bot.zip");
+
             }
             catch (Exception e)
             {

@@ -29,13 +29,11 @@ namespace WebTelegramBotsBuilder.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                ViewData["name"] = User.Identity.Name;
-                return View();
+                return View("Index", User.Identity.Name);
             }
             else
             {
-                ViewData["name"] = "";
-                return View();
+                return View("Index", "");
             }
         }
 

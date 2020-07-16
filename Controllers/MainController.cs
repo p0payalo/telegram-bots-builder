@@ -32,7 +32,7 @@ namespace WebTelegramBotsBuilder.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Bots()
         {
-            Models.User user = await db.Users.Include(u => u.Bots).FirstAsync(x => x.Name == User.Identity.Name);
+            Models.User user = await db.Users.Include(u => u.Bots).FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
             if (user != null)
             {
                 return View("Bots", user);

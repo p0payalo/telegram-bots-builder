@@ -1,6 +1,8 @@
-﻿@{
-    if (ViewData["name"].ToString() != "")
+﻿@model string
+@{
+    if (Model != "")
     {
+        ViewData["name"] = Model;
         Layout = "UserLayout";
     }
     else
@@ -9,7 +11,46 @@
     }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @Model</h1>
-    <p>This application will create your own telegram bot without programming knowledge</p>
+@section Styles
+{
+    <link href="~/css/index.css" rel="stylesheet" />
+}
+
+<div class="container">
+    <div class="text-center">
+        <h1 class="mt-3">Telegram Bots builder</h1>
+        <p class="mt-1">This application will create your own telegram bot without programming knowledge</p>
+        <a asp-action="Bots" asp-controller="Main" class="btn btn-lg btn-success text-white">Get Started</a>
+        <h2 class="mt-5">Our Team</h2>
+    </div>
+    <div class="row">
+        <div class="col-xl-3 col-md-6 col-sm-12">
+            <div class="person">
+                <p>Project Lead</p>
+                <img src="~/photos/project-leader-ps.jpg" />
+                <p>Vyacheslav Vityuk</p>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12">
+            <div class="person">
+                <p>Developer</p>
+                <img src="~/photos/programmer-ps.jpg" />
+                <p>Slavka Vityuk</p>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12">
+            <div class="person">
+                <p>Designer</p>
+                <img src="~/photos/designer-ps.jpg" />
+                <p>Vyacheslacio Vityuccini</p>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12">
+            <div class="person">
+                <p>Translator</p>
+                <img src="~/photos/translator-ps.jpg" />
+                <p>Slavik Vityuk</p>
+            </div>
+        </div>
+    </div>
 </div>

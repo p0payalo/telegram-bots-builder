@@ -15,11 +15,9 @@
 
 # Mono auto generated files
 mono_crash.*
-
-#userfiles
-[Uu]ser[Ff]iles/*
-![Uu]ser[Ff]iles/.gitkeep 
-![Uu]ser[Ff]iles/BotHandler
+!UserFiles/BotHandler(linux)
+!UserFiles/BotHandler(win)
+!UserFiles/BotHandler(mac-os)
 
 # Build results
 [Dd]ebug/

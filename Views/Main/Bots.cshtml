@@ -36,9 +36,21 @@
                                 <input type="hidden" name="Id" value="@i.Id" />
                                 <input type="submit" value="Delete" class="btn btn-danger mb-2" />
                             </form>
+                            <br />
                             <form method="post" asp-action="DownloadBot" asp-controller="Main" class="buttons_view">
                                 <input type="hidden" name="Id" value="@i.Id" />
-                                <input type="submit" value="Download" class="btn btn-secondary mb-2" />
+                                <input type="hidden" name="downloadType" value="@WebTelegramBotsBuilder.Models.Helpers.DownloadType.Windows" />
+                                <input type="submit" value="Download for Windows" class="btn btn-secondary mb-2" />
+                            </form>
+                            <form method="post" asp-action="DownloadBot" asp-controller="Main" class="buttons_view">
+                                <input type="hidden" name="Id" value="@i.Id" />
+                                <input type="hidden" name="downloadType" value="@WebTelegramBotsBuilder.Models.Helpers.DownloadType.Linux" />
+                                <input type="submit" value="Download for Linux" class="btn btn-secondary mb-2" />
+                            </form>
+                            <form method="post" asp-action="DownloadBot" asp-controller="Main" class="buttons_view">
+                                <input type="hidden" name="Id" value="@i.Id" />
+                                <input type="hidden" name="downloadType" value="@WebTelegramBotsBuilder.Models.Helpers.DownloadType.OSX" />
+                                <input type="submit" value="Download for Mac OS" class="btn btn-secondary mb-2" />
                             </form>
 
                         </div>

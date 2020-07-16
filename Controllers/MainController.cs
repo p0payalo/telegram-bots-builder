@@ -78,7 +78,7 @@ namespace WebTelegramBotsBuilder.Controllers
 
         [HttpPost]
         [Route("download")]
-        public async Task<IActionResult> DownloadBot(int Id)
+        public async Task<IActionResult> DownloadBot(int Id, DownloadType downloadType)
         {
             try
             {
@@ -86,11 +86,27 @@ namespace WebTelegramBotsBuilder.Controllers
                                         .ThenInclude(x => x.Response).FirstAsync(x => x.Name == User.Identity.Name);
                 TelegramBot bot = user.Bots.First(x => x.Id == Id);
                 byte[] result;
+                string targetPath = "";
+                switch(downloadType)
+                {
+                    case DownloadType.Windows:
+                        targetPath = appEnvironment.ContentRootPath + @"\UserFiles\BotHandler(win)";
+                        break;
+                    case DownloadType.Linux:
+                        targetPath = appEnvironment.ContentRootPath + @"\UserFiles\BotHandler(linux)";
+                        break;
+                    case DownloadType.OSX:
+                        targetPath = appEnvironment.ContentRootPath + @"\UserFiles\BotHandler(mac-os)";
+                        break;
+                    default:
+                        targetPath = appEnvironment.ContentRootPath + @"\UserFiles\BotHandler(win)";
+                        break;
+                }
                 using(MemoryStream ms = new MemoryStream())
                 {
                     using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                     {
-                        string[] botHandlerFiles = Directory.GetFiles(appEnvironment.ContentRootPath + @"\UserFiles\BotHandler");
+                        string[] botHandlerFiles = Directory.GetFiles(targetPath);
                         foreach (var i in botHandlerFiles)
                         {
                             zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));

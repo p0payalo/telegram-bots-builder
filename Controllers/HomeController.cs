@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -58,7 +60,7 @@ namespace WebTelegramBotsBuilder.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name && u.Password == model.Password);
+                User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name && u.Password == ToMD5Hash(model.Password));
                 if (user != null)
                 {
                     await Authenticate(user.Name);
@@ -79,7 +81,7 @@ namespace WebTelegramBotsBuilder.Controllers
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    db.Users.Add(new User() { Name = model.Name, Password = model.Password });
+                    db.Users.Add(new User() { Name = model.Name, Password = ToMD5Hash(model.Password) });
                     await db.SaveChangesAsync();
                     Debug.WriteLine(db.Users.Count());
                     await Authenticate(model.Name);
@@ -88,6 +90,16 @@ namespace WebTelegramBotsBuilder.Controllers
                 else ModelState.AddModelError("", "Name is already exist");
             }
             return View(model);
+        }
+
+        [NonAction]
+        private string ToMD5Hash(string Input)
+        {
+            using(var md5 = MD5.Create())
+            {
+                byte[] result = md5.ComputeHash(Encoding.UTF8.GetBytes(Input));
+                return Encoding.UTF8.GetString(result);
+            }
         }
 
         [Authorize]

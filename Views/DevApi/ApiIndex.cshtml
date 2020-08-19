@@ -1,0 +1,10 @@
+﻿@{ 
+    if (User.Identity.Name != null)
+    {
+        ViewBag.Name = User.Identity.Name;
+        Layout = "UserLayout";
+    }
+    else Layout = "AnonymousLayout";
+}
+
+

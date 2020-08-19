@@ -12,6 +12,7 @@ namespace WebTelegramBotsBuilder.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
+        public string ApiToken { get; set; }
         public virtual IEnumerable<TelegramBot> Bots { get; set; }
     }
 }

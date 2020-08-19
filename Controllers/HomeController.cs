@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -81,7 +82,7 @@ namespace WebTelegramBotsBuilder.Controllers
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    db.Users.Add(new User() { Name = model.Name, Password = ToMD5Hash(model.Password) });
+                    db.Users.Add(new User() { Name = model.Name, Password = ToMD5Hash(model.Password), ApiToken = Guid.NewGuid().ToString() });
                     await db.SaveChangesAsync();
                     Debug.WriteLine(db.Users.Count());
                     await Authenticate(model.Name);

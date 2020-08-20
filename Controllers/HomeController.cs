@@ -41,6 +41,13 @@ namespace WebTelegramBotsBuilder.Controllers
         }
 
         [HttpGet]
+        [Route("api")]
+        public IActionResult ApiIndex()
+        {
+            return View();
+        }
+
+        [HttpGet]
         [Route("login")]
         public IActionResult LogIn()
         {

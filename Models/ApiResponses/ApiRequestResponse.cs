@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebTelegramBotsBuilder.Models.ApiResponses
 {
-    public abstract class ApiResponse
+    public class ApiRequestResponse : ApiResponse
     {
-        public bool Status { get; set; }
+        public string Message { get; set; }
     }
 }

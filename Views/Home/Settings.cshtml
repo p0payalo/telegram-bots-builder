@@ -1,0 +1,41 @@
+﻿@model User
+@{
+    if (User.Identity.Name != null)
+    {
+        ViewBag.Name = User.Identity.Name;
+        Layout = "UserLayout";
+    }
+    else Layout = "AnonymousLayout";
+}
+
+@section Styles{
+    <link href="~/css/Register.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="form-container">
+
+    <form method="post" asp-action="Settings" asp-controller="Home">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" value="@Model.Id"/>
+        <div class="form-group">
+            <label asp-for="Name" for="inputName">Name</label>
+            <input asp-for="Name" type="text" name="username" placeholder="Your name here" id="inputName" class="form-control" value="@Model.Name" />
+            <span asp-validation-for="Name" style="color:red" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" for="inputPassword">Password</label>
+            <input asp-for="Password" type="text" name="password" placeholder="Your password here" id="inputPassword" class="form-control" />
+            <span asp-validation-for="Password" style="color:red" />
+        </div>
+        <div class="form-group">
+            <label>Your api token: @Model.ApiToken</label>
+        </div>
+        <input type="submit" value="Save Changes" class="btn btn-primary" />
+    </form>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

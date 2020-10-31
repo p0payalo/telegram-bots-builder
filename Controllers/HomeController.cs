@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebTelegramBotsBuilder.Models;
+using WebTelegramBotsBuilder.Models.Helpers;
 using WebTelegramBotsBuilder.Models.ViewModels;
 
 namespace WebTelegramBotsBuilder.Controllers
@@ -61,6 +62,40 @@ namespace WebTelegramBotsBuilder.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("settings")]
+        public  async Task<IActionResult> Settings()
+        {
+
+            User user = await db.Users.FirstOrDefaultAsync(x => x.Name == User.Identity.Name);
+            if (user != null)
+                return View(user);
+            else return RedirectToAction("LogIn", "Home");
+        }
+
+        [HttpPost]
+        [Route("settings")]
+        public async Task<IActionResult> Settings(int id, string username, string password)
+        {
+            if(ModelState.IsValid)
+            {
+                User us = await db.Users.FirstOrDefaultAsync(x => x.Id == id);
+                us.Name = username;
+                if(!us.Password.Equals(password))
+                {
+                    us.Password = MD5Helper.ToMD5Hash(us.Password);
+                }
+                db.Users.Update(us);
+                await db.SaveChangesAsync();
+            }
+            else
+            {
+                ModelState.AddModelError("", "Wrong user data");
+                return View(ModelState);
+            }
+            return View("LogIn");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("login")]
@@ -68,7 +103,7 @@ namespace WebTelegramBotsBuilder.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name && u.Password == ToMD5Hash(model.Password));
+                User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name && u.Password == MD5Helper.ToMD5Hash(model.Password));
                 if (user != null)
                 {
                     await Authenticate(user.Name);
@@ -89,7 +124,7 @@ namespace WebTelegramBotsBuilder.Controllers
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Name == model.Name);
                 if (user == null)
                 {
-                    db.Users.Add(new User() { Name = model.Name, Password = ToMD5Hash(model.Password), ApiToken = Guid.NewGuid().ToString() });
+                    db.Users.Add(new User() { Name = model.Name, Password = MD5Helper.ToMD5Hash(model.Password), ApiToken = Guid.NewGuid().ToString() });
                     await db.SaveChangesAsync();
                     Debug.WriteLine(db.Users.Count());
                     await Authenticate(model.Name);
@@ -98,16 +133,6 @@ namespace WebTelegramBotsBuilder.Controllers
                 else ModelState.AddModelError("", "Name is already exist");
             }
             return View(model);
-        }
-
-        [NonAction]
-        private string ToMD5Hash(string Input)
-        {
-            using(var md5 = MD5.Create())
-            {
-                byte[] result = md5.ComputeHash(Encoding.UTF8.GetBytes(Input));
-                return Encoding.UTF8.GetString(result);
-            }
         }
 
         [Authorize]

@@ -28,6 +28,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Telegram.Bot" Version="15.7.1" />
   </ItemGroup>
 
@@ -37,7 +38,7 @@
 
   <ItemGroup>
     <Reference Include="BotCreator">
-      <HintPath>..\..\BotCreator\BotCreator\bin\Release\BotCreator.dll</HintPath>
+      <HintPath>UserFiles\BotHandler(win)\BotCreator.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -13,6 +13,8 @@ using System.IO;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Hosting;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace WebTelegramBotsBuilder.Controllers
 {
@@ -111,11 +113,10 @@ namespace WebTelegramBotsBuilder.Controllers
                         {
                             zip.CreateEntryFromFile(i, "root/" + Path.GetFileName(i));
                         }
-                        ZipArchiveEntry entry = zip.CreateEntry("root/" + bot.BotName + ".bot");
-                        using (Stream entryStream = entry.Open())
+                        ZipArchiveEntry entry = zip.CreateEntry("root/" + "botsettings" + ".json");
+                        using (StreamWriter entryStream = new StreamWriter(entry.Open()))
                         {
-                            BinaryFormatter bf = new BinaryFormatter();
-                            bf.Serialize(entryStream, bot);
+                            await entryStream.WriteLineAsync(JsonConvert.SerializeObject(bot));
                         }
                     }
                     result = ms.ToArray();
